@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Tesla",
+    "query": "Tesla",
+    "ticker": "TSLA"
+  },
+  {
+    "name": "Circle",
+    "query": "Circle USDC",
+    "ticker": "CRCL"
+  }
+]
