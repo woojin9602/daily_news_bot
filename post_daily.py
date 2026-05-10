@@ -31,6 +31,12 @@ def _yesterday_str() -> str:
     return (datetime.now(KST) - timedelta(days=1)).strftime("%Y-%m-%d (%a)")
 
 
+_SESSION_BADGE = {
+    "post": " <i>(시간외)</i>",
+    "pre": " <i>(장전)</i>",
+}
+
+
 def _quote_line(ticker: str) -> str:
     if not ticker:
         return ""
@@ -42,8 +48,9 @@ def _quote_line(ticker: str) -> str:
     sign = "+" if pct > 0 else ""
     sym = "$" if q["currency"] == "USD" else f"{q['currency']} "
     chart_url = f"https://www.tradingview.com/symbols/{ticker}/"
+    session_badge = _SESSION_BADGE.get(q.get("session", "regular"), "")
     return (
-        f'{sym}{q["price"]:,.2f}  {arrow} {sign}{pct:.2f}%  '
+        f'{sym}{q["price"]:,.2f}  {arrow} {sign}{pct:.2f}%{session_badge}  '
         f'· <a href="{escape(chart_url)}">📈 차트 보기</a>'
     )
 
