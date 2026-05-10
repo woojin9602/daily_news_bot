@@ -2,8 +2,9 @@ name: Daily News Bot
 
 on:
   schedule:
-    # 22:00 UTC = 07:00 KST (다음날). GitHub Actions cron은 best-effort라 5~20분 지연 가능.
-    - cron: '0 22 * * *'
+    # 19:23 UTC = KST 04:23. 일반적인 5~20분 지연을 감안하면 KST 04:30~05:00 도달 기대.
+    # 정각(00분)은 cron 큐가 가장 혼잡해서 private repo가 심하게 밀린다 → non-zero 분으로 회피.
+    - cron: '23 19 * * *'
   workflow_dispatch:
 
 permissions:
