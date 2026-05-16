@@ -1,12 +1,9 @@
-"""Yahoo Finance v8 chart 엔드포인트로 현재가·전일종가·등락률 조회.
+"""Yahoo Finance v8 chart 엔드포인트로 '직전에 완료된 정규장' 종가·등락률 조회.
 
-`includePrePost=true`로 분봉을 받아 마지막 데이터 시각이 정규장 종가 시각(regularMarketTime)보다
-뒤면 extended hours(시간외/장전)로 판정해 표시 가격을 바꾼다.
-- 정규장: regularMarketPrice vs chartPreviousClose
-- 시간외(post): 마지막 분봉 close vs regularMarketPrice (당일 정규장 종가 대비)
-  └ regularMarketTime + 4.5시간 이내인 경우 (extended hours는 정규장 종료 후 4시간)
-- 장전(pre): 마지막 분봉 close vs regularMarketPrice (직전 정규장=전일 종가 대비)
-  └ regularMarketTime + 4.5시간 초과 (= 다음 거래일 pre-market)
+봇은 KST 04:30(= 미 동부 EDT 15:30, 즉 미국 정규장 진행 중)에 실행되므로
+`meta.regularMarketPrice`를 그대로 쓰면 장중가 또는 시간외 가격이 표시된다.
+대신 일별 OHLC 시계열(`indicators.quote[0].close`)에서 미완료 봉을 걸러내고
+가장 최근 두 개의 '완료된 정규장 종가'를 비교한다.
 """
 
 import logging
@@ -21,65 +18,42 @@ _HEADERS = {
     )
 }
 
-_POST_WINDOW_SEC = 4.5 * 3600  # 정규장 종료 후 시간외 거래 창 (실제 4시간 + 30분 버퍼)
+# 마지막 일봉을 '미완료'로 보고 제외해야 하는 상태들.
+# REGULAR: 정규장 진행 중, PRE: 장전 (오늘 봉이 아직 생성 중이거나 직전 거래일 미마감 데이터)
+_INCOMPLETE_STATES = {"REGULAR", "PRE"}
 
 
 def fetch_quote(ticker: str) -> dict | None:
     url = (
         f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
-        "?interval=1m&range=1d&includePrePost=true"
+        "?interval=1d&range=10d"
     )
     try:
         r = requests.get(url, headers=_HEADERS, timeout=10)
         r.raise_for_status()
         result = r.json()["chart"]["result"][0]
         meta = result["meta"]
-        regular_price = meta.get("regularMarketPrice")
-        prev_close = meta.get("chartPreviousClose") or meta.get("previousClose")
-        regular_time = meta.get("regularMarketTime")
-        if regular_price is None or not prev_close:
+        market_state = meta.get("marketState", "")
+
+        timestamps = result.get("timestamp") or []
+        closes = (result.get("indicators", {}).get("quote") or [{}])[0].get("close") or []
+        valid = [(ts, c) for ts, c in zip(timestamps, closes) if c is not None]
+
+        if market_state in _INCOMPLETE_STATES and valid:
+            valid = valid[:-1]
+
+        if len(valid) < 2:
+            log.warning("Quote: %s 완료된 거래일 데이터 부족 (state=%s)", ticker, market_state)
             return None
 
-        # 기본: 정규장 시세
-        price = float(regular_price)
-        base = float(prev_close)
-        session = "regular"
-
-        # 분봉 시계열 마지막 non-null close 시각으로 시간외/장전 감지
-        timestamps = result.get("timestamp") or []
-        quote_block = (result.get("indicators", {}).get("quote") or [{}])[0]
-        closes = quote_block.get("close") or []
-        last_idx = next(
-            (i for i in range(len(closes) - 1, -1, -1) if closes[i] is not None),
-            None,
-        )
-
-        if (
-            last_idx is not None
-            and regular_time
-            and last_idx < len(timestamps)
-            and timestamps[last_idx] > regular_time + 60  # 정규장 종가보다 1분 이상 뒤
-        ):
-            extended_price = float(closes[last_idx])
-            delta_sec = timestamps[last_idx] - regular_time
-            if delta_sec <= _POST_WINDOW_SEC:
-                # 정규장 종료 후 시간외 거래 (당일 종가 대비)
-                price = extended_price
-                base = float(regular_price)
-                session = "post"
-            else:
-                # 다음 거래일 장전 (직전 정규장 종가=전일 종가 대비)
-                price = extended_price
-                base = float(regular_price)
-                session = "pre"
-
+        price = float(valid[-1][1])
+        prev_close = float(valid[-2][1])
         return {
             "ticker": ticker,
             "price": price,
-            "prev_close": base,
-            "change_pct": (price - base) / base * 100,
+            "prev_close": prev_close,
+            "change_pct": (price - prev_close) / prev_close * 100,
             "currency": meta.get("currency", "USD"),
-            "session": session,
         }
     except Exception as e:
         log.warning("Quote fetch failed for %s: %s", ticker, e)
