@@ -1,6 +1,11 @@
 {
   "Tesla": {
     "recent_titles": [
+      "Tesla launched its self-driving system in China after years of delays - qz.com",
+      "Tesla to Inject $250 Million into German Factory - WSJ",
+      "GM pauses Indiana EV battery plant, Tesla earns $890M from SpaceX and xAI, Volkswagen rules out China plant talks - CBT News",
+      "테슬라 로보택시 충돌 잇따라…원격조작 중 사고도 확인 - 초이스스탁",
+      "\"역시 전기차는 테슬라\"...'모델 Y·3', 국내 시장 20% 뚫었다 - 녹색경제신문",
       "Tesla (TSLA) officially abandons India factory after years of broken promises - Electrek",
       "Tesla Relaxes Driver Monitoring With FSD v14.3.3 - Not a Tesla App",
       "Tesla Is Gearing Up For Autonomy Tests In China - Jalopnik",
@@ -25,16 +30,15 @@
       "테슬라 中법인 “저가 소형 SUV 개발 사실 아냐”…외신 보도 부인 - 초이스스탁",
       "Tesla Reduces FSD Price by $3k, Slashes Model S and Model X Prices by 15 Percent - Not a Tesla App",
       "The Tesla Model S and Model X are officially dead as of this past weekend - MSN",
-      "[올댓차이나] 中 전기차 메이커, 잇따라 가격 인상·혜택 축소…테슬라도 430만원 올려 - 뉴시스",
-      "Tesla Model Y is first vehicle to pass new US driver assistance system tests - MSN",
-      "테슬라, 중국 완전자율주행 승인 기대감 확대...로보택시 전략 본격 시험대 - 레디앙",
-      "테슬라 실적발표 D-3…로보택시·휴머노이드 ‘관건’ - 초이스스탁",
-      "테슬라 저가형 사이버트럭 리콜…“주행 중 바퀴 이탈 가능성” - 초이스스탁",
-      "Tesla building dedicated Cybercab fleet facilities in Nevada and Texas - driveteslacanada.ca"
+      "[올댓차이나] 中 전기차 메이커, 잇따라 가격 인상·혜택 축소…테슬라도 430만원 올려 - 뉴시스"
     ]
   },
   "Circle": {
     "recent_titles": [
+      "Macquarie Cuts AI Stocks and Bitcoin ETFs, Significantly Increases Circle, Will It Spawn a New Market Direction? - TradingKey",
+      "Stablecorp Enables First Onchain CAD/USD Settlement with QCAD on Circle's StableFX - TradingView",
+      "Circle Internet Group Deepens USDC Role In Onchain Perpetuals Battle With Tether - Yahoo Finance",
+      "제레미 알레어, USDC 연동 AI 전화 통화 기능 출시 발표 - Traders Union",
       "단용핑이 암호화폐 기업에 첫 투자를 했는데, 왜 하필 서클일까? - PANews",
       "Circle Deploys CCTP on Stellar for Native USDC Cross-Chain Transfers - BanklessTimes",
       "Expert warns Tether, Circle face liquidity crisis despite T-bill reserves - Crypto Briefing",
@@ -60,11 +64,7 @@
       "What Circle Internet Group (CRCL)'s Agent Stack Launch Means For Shareholders - simplywall.st",
       "Circle Internet's Q1 results demonstrate surging USDC transaction volume growth - MSN",
       "Circle stock sinks 10% amid analyst downgrade, Drift Protocol probe - MSN",
-      "Coinbase backs Hyperliquid stablecoin push as DeFi trading volumes climb - CoinDesk",
-      "Circle Beats Q4 Forecasts With $770M Revenue and 77% Growth - CoinMarketCap",
-      "Coinbase Wins USDC Treasury Deployer Seat on Hyperliquid, Circle Handles Cross-Chain Infrastructure - Bitcoin News",
-      "ZachXBT Accuses Circle and Jeremy Allaire of Failing to Freeze USDC During Exploits - CryptoRank",
-      "Circle issued 500 million USDC on the Solana network within 24 hours - Bitget"
+      "Coinbase backs Hyperliquid stablecoin push as DeFi trading volumes climb - CoinDesk"
     ]
   }
 }
